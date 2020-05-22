@@ -42,10 +42,10 @@ fi
 
 if [[ "$installer_type" == "edt" ]]; then
 EDTPATHLINK=$(curl -s -G \
--b /tmp/cookies.txt \
---data-urlencode "nick=DevelopmentTools10" \
---data-urlencode "ver=$ONEC_VERSION" \
-https://releases.1c.ru/version_files | grep -oP '(?<=a href=")[^"]+path=(.*)(?=">.*для Linux 64 Bit<)' | grep -oP '(?<=path=).*')
+    -b /tmp/cookies.txt \
+    --data-urlencode "nick=DevelopmentTools10" \
+    --data-urlencode "ver=$ONEC_VERSION" \
+    https://releases.1c.ru/version_files | grep -oP '(?<=a href=")[^"]+path=(.*)(?=">.*для Linux 64 Bit<)' | grep -oP '(?<=path=).*')
 
 EDTLINK=$(curl -s -G \
     -b /tmp/cookies.txt \
@@ -54,48 +54,89 @@ EDTLINK=$(curl -s -G \
     --data-urlencode "path=$EDTPATHLINK" \
     https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 else
-
 CLIENTLINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$ONEC_VERSION" \
     --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\client_${ONEC_VERSION//./_}.deb64.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
+    https://releases.1c.ru/version_file |
+    curl -s -G \
+    -b /tmp/cookies.txt \
+    --data-urlencode "nick=Platform83" \
+    --data-urlencode "ver=$ONEC_VERSION" \
+    --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\client.deb64.tar.gz" \
+    https://releases.1c.ru/version_file |
+    grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 
 CLIENT32LINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$ONEC_VERSION" \
     --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\client_${ONEC_VERSION//./_}.deb32.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
+    https://releases.1c.ru/version_file |
+    curl -s -G \
+    -b /tmp/cookies.txt \
+    --data-urlencode "nick=Platform83" \
+    --data-urlencode "ver=$ONEC_VERSION" \
+    --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\client.deb32.tar.gz" \
+    https://releases.1c.ru/version_file |
+    grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 
 THINCLIENTLINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$ONEC_VERSION" \
     --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\thin.client_${ONEC_VERSION//./_}.deb64.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
+    https://releases.1c.ru/version_file |
+    curl -s -G \
+    -b /tmp/cookies.txt \
+    --data-urlencode "nick=Platform83" \
+    --data-urlencode "ver=$ONEC_VERSION" \
+    --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\thin.client.deb64.tar.gz" \
+    https://releases.1c.ru/version_file |
+    grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 
 THINCLIENT32LINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$ONEC_VERSION" \
     --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\thin.client_${ONEC_VERSION//./_}.deb32.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
+    https://releases.1c.ru/version_file |
+    curl -s -G \
+    -b /tmp/cookies.txt \
+    --data-urlencode "nick=Platform83" \
+    --data-urlencode "ver=$ONEC_VERSION" \
+    --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\thin.client.deb32.tar.gz" \
+    https://releases.1c.ru/version_file |
+    grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 
 SERVERLINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$ONEC_VERSION" \
     --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\deb64_${ONEC_VERSION//./_}.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
+    https://releases.1c.ru/version_file |
+    curl -s -G \
+    -b /tmp/cookies.txt \
+    --data-urlencode "nick=Platform83" \
+    --data-urlencode "ver=$ONEC_VERSION" \
+    --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\deb64.tar.gz" \
+    https://releases.1c.ru/version_file |
+    grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 
 SERVER32LINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=Platform83" \
     --data-urlencode "ver=$ONEC_VERSION" \
     --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\deb_${ONEC_VERSION//./_}.tar.gz" \
-    https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
+    https://releases.1c.ru/version_file |
+    curl -s -G \
+    -b /tmp/cookies.txt \
+    --data-urlencode "nick=Platform83" \
+    --data-urlencode "ver=$ONEC_VERSION" \
+    --data-urlencode "path=Platform\\${ONEC_VERSION//./_}\\deb.tar.gz" \
+    https://releases.1c.ru/version_file |
+    grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 fi
 
 case "$installer_type" in

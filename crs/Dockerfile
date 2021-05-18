@@ -1,3 +1,6 @@
+# persist ARG to all stages 
+ARG ONEC_VERSION  
+
 FROM alpine:latest as downloader
 
 ARG ONEC_USERNAME
@@ -66,6 +69,9 @@ VOLUME /home/usr1cv8/.1cv8
 COPY ./crs/docker-entrypoint.sh /usr/local/bin
 RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 ENTRYPOINT ["docker-entrypoint.sh"]
+
+ARG ONEC_VERSION
+ENV onec_ver=$ONEC_VERSION
 
 EXPOSE 1542
 CMD ["crserver"]

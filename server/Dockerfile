@@ -28,9 +28,9 @@ WORKDIR /tmp
 SHELL ["/bin/bash", "-c"]
 RUN set -xe; \
   if [ "$nls" = true ]; then \
-    dpkg -i 1c-enterprise83-{common,server}*.deb; \
+    dpkg -i 1c-enterprise*-{common,server}*.deb; \
   else \
-    dpkg -i 1c-enterprise83-{common,server}_*.deb; \
+    dpkg -i 1c-enterprise*-{common,server}_*.deb; \
   fi
 
 ADD https://github.com/tianon/gosu/releases/download/$gosu_ver/gosu-amd64 /bin/gosu
@@ -42,6 +42,10 @@ LABEL maintainer="Anton Kvashenkin <anton.jugatsu@gmail.com> (@jugatsu)"
 
 ARG onec_uid="999"
 ARG onec_gid="999"
+ARG ONEC_VERSION
+ARG ONEC_8318PLUS_VERSION
+ENV onec_ver=$ONEC_VERSION
+ENV onec_8318plus_version=$ONEC_8318PLUS_VERSION
 
 COPY --from=base /opt /opt
 COPY --from=base /bin/gosu /bin/gosu
@@ -65,7 +69,11 @@ RUN groupadd -r grp1cv8 --gid=$onec_gid \
 
 VOLUME /home/usr1cv8/.1cv8/ /var/log/1C
 
+# Копируем в директории возможных версий
+# 18-
 COPY ./server/logcfg.xml /home/usr1cv8/.1cv8/1C/1cv8/conf
+# 18+
+COPY ./server/logcfg.xml /opt/1cv8/conf
 
 COPY ./server/docker-entrypoint.sh /usr/local/bin
 RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat

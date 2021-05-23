@@ -1,5 +1,2 @@
 *.sh eol=lf
-configs/client-vnc/rootfs/etc/services.d/onec/run eol=lf
-configs/client-vnc/rootfs/etc/services.d/x11vnc/run eol=lf
-configs/client-vnc/rootfs/etc/services.d/xfce/run eol=lf
-configs/client-vnc/rootfs/etc/services.d/xvfb/run eol=lf
+configs/client-vnc/rootfs/etc/** eol=lf

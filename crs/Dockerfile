@@ -42,6 +42,10 @@ LABEL maintainer="Anton Kvashenkin <anton.jugatsu@gmail.com> (@jugatsu)"
 
 ARG onec_uid="999"
 ARG onec_gid="999"
+ARG ONEC_VERSION
+ARG ONEC_8318PLUS_VERSION
+ENV onec_ver=$ONEC_VERSION
+ENV onec_8318plus_version=$ONEC_8318PLUS_VERSION
 
 COPY --from=base /opt /opt
 COPY --from=base /bin/gosu /bin/gosu

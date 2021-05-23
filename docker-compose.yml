@@ -36,7 +36,8 @@ services:
 
   ras:
     image: ${DOCKER_USERNAME}/onec-server:${ONEC_VERSION}
-    entrypoint: /opt/1C/v8.3/x86_64/ras
+    # Для версии платформы ниже 18 следует использовать /opt/1C/v8.3/x86_64/ras
+    entrypoint:  /opt/1cv8/x86_64/${ONEC_VERSION}/ras
     command: "cluster srv:1540"
     ports:
       - "${RAS_PORT}:1545"

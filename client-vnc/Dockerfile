@@ -4,6 +4,9 @@ FROM ${DOCKER_USERNAME}/onec-client:${ONEC_VERSION} as base
 
 FROM debian:stretch-slim
 ARG ONEC_VERSION
+ARG ONEC_8318PLUS_VERSION
+ENV onec_ver=$ONEC_VERSION
+ENV onec_8318plus_version=$ONEC_8318PLUS_VERSION
 
 COPY --from=base /opt /opt
 
@@ -101,7 +104,7 @@ RUN groupadd -r usr1cv8 --gid=2001 \
   && chown -R usr1cv8:usr1cv8 /home/usr1cv8
 
 COPY ./configs/client-vnc/rootfs/ /
-RUN mkdir -p /opt/1cv8/x86_64/${ONEC_VERSION} \
+RUN mkdir -p /opt/1cv8/x86_64/${ONEC_VERSION}/conf \
   && ln -s /opt/1C/v8.3/x86_64/conf /opt/1cv8/x86_64/${ONEC_VERSION}/conf
 
 ENV DISPLAY=:0

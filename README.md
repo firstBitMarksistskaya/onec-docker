@@ -44,18 +44,23 @@ $ docker-compose up -d
 
 # Оглавление
 
-- [Сервер](#сервер)
-- [Сервер с дополнительными языками](#Сервер-с-дополнительными-языками)
-- [Клиент](#support)
-- [Клиент с поддержкой VNC](#support)
-- [Клиент с дополнительными языками](#support)
-- [Тонкий клиент](#support)
-- [Тонкий клиент с дополнительными языками](#support)
-- [Хранилище конфигурации](#contributing)
-- [rac-gui](#license)
-- [gitsync](#license)
-- [oscript](#license)
-- [vanessa-runner](#license)
+- [Описание](#описание)
+- [Использование](#использование)
+  - [Как сбилдить образы](#как-сбилдить-образы)
+  - [Как запустить в docker-compose](#как-запустить-в-docker-compose)
+- [Оглавление](#оглавление)
+  - [Сервер](#сервер)
+  - [Сервер с дополнительными языками](#сервер-с-дополнительными-языками)
+  - [Клиент](#клиент)
+  - [Клиент с поддержкой VNC](#клиент-с-поддержкой-vnc)
+  - [Клиент с дополнительными языками](#клиент-с-дополнительными-языками)
+  - [Тонкий клиент](#тонкий-клиент)
+  - [Тонкий клиент с дополнительными языками](#тонкий-клиент-с-дополнительными-языками)
+  - [Хранилище конфигурации](#хранилище-конфигурации)
+  - [rac-gui](#rac-gui)
+  - [gitsync](#gitsync)
+  - [oscript](#oscript)
+  - [vanessa-runner](#vanessa-runner)
 
 ## Сервер
 [(Наверх)](#Оглавление)
@@ -64,6 +69,7 @@ $ docker-compose up -d
 docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
   --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
   --build-arg ONEC_VERSION=${ONEC_VERSION} \
+  --build-arg ONEC_8318PLUS_VERSION=${ONEC_8318PLUS_VERSION} \
   -t ${DOCKER_USERNAME}/onec-server:${ONEC_VERSION} \
   -f server/Dockerfile .
 ```
@@ -75,6 +81,7 @@ docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
 docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
   --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
   --build-arg ONEC_VERSION=${ONEC_VERSION} \
+  --build-arg ONEC_8318PLUS_VERSION=${ONEC_8318PLUS_VERSION} \
   --build-arg nls_enabled=true \
   -t ${DOCKER_USERNAME}/onec-server-nls:${ONEC_VERSION} \
   -f server/Dockerfile .
@@ -97,6 +104,7 @@ docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
 ```bash
 docker build --build-arg DOCKER_USERNAME=${DOCKER_USERNAME} \
   --build-arg ONEC_VERSION=${ONEC_VERSION} \
+  --build-arg ONEC_8318PLUS_VERSION=${ONEC_8318PLUS_VERSION} \
   -t ${DOCKER_USERNAME}/onec-client-vnc:${ONEC_VERSION} \
   -f client-vnc/Dockerfile .
 ```
@@ -143,6 +151,7 @@ docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
 docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
   --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
   --build-arg ONEC_VERSION=${ONEC_VERSION} \
+  --build-arg ONEC_8318PLUS_VERSION=${ONEC_8318PLUS_VERSION} \
   -t ${DOCKER_USERNAME}/onec-crs:${ONEC_VERSION} \
   -f crs/Dockerfile .
 ```

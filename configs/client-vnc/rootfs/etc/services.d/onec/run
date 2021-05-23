@@ -2,5 +2,9 @@
 
 # https://github.com/just-containers/s6-overlay/issues/165
 export HOME=/home/usr1cv8
+if [ "$onec_8318plus_version" = true ]; then
+    exec s6-setuidgid usr1cv8 /opt/1cv8/x86_64/$onec_ver/1cv8
+else
+    exec s6-setuidgid usr1cv8 /opt/1C/v8.3/x86_64/1cv8
+fi
 
-exec s6-setuidgid usr1cv8 /opt/1C/v8.3/x86_64/1cv8

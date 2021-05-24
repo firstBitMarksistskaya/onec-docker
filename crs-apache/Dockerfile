@@ -25,6 +25,9 @@ COPY ./crs-apache/docker-entrypoint.sh /
 RUN chmod 755 /docker-entrypoint.sh \
   && chmod +x /docker-entrypoint.sh
 
+ARG ONEC_VERSION
+ENV onec_ver=$ONEC_VERSION
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 80

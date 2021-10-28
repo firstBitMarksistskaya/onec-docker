@@ -61,6 +61,7 @@ RUN set -xe \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       locales \
       ca-certificates \
+      libgtk2.0-0 \
       libwebkitgtk-3.0-0 \
       ttf-mscorefonts-installer \
       libfontconfig1 \

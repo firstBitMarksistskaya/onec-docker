@@ -9,9 +9,9 @@ ARG gitsync_ver=3.0.0
 
 COPY --from=base /opt /opt
 
-RUN echo "deb http://http.debian.net/debian/ stretch main contrib non-free" > /etc/apt/sources.list \
-  && echo "deb http://http.debian.net/debian/ stretch-updates main contrib non-free" >> /etc/apt/sources.list \
-  && echo "deb http://security.debian.org/ stretch/updates main contrib non-free" >> /etc/apt/sources.list \
+RUN echo "deb http://http.debian.net/debian/ stretch main contrib non-free" > /etc/apt/sources.list.d/stretch.list \
+  && echo "deb http://http.debian.net/debian/ stretch-updates main contrib non-free" >> > /etc/apt/sources.list.d/stretch-updates.list \
+  && echo "deb http://security.debian.org/ stretch/updates main contrib non-free" >> > /etc/apt/sources.list.d/stretch-security-updates.list \
   && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -27,6 +27,11 @@ RUN echo "deb http://http.debian.net/debian/ stretch main contrib non-free" > /e
       libmagickwand-6.q16-3 \
       libmono-system-runtime-serialization4.0-cil \
       dbus-x11 \
+  && rm -rf \
+    /etc/apt/sources.list.d/stretch.list \
+    /etc/apt/sources.list.d/stretch-updates.list \
+    /etc/apt/sources.list.d/stretch-security-updates.list \
+  && apt-get update \
   && rm -rf  \
     /var/lib/apt/lists/* \
     /var/cache/debconf \

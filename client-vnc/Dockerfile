@@ -2,7 +2,7 @@ ARG DOCKER_USERNAME
 ARG ONEC_VERSION
 FROM ${DOCKER_USERNAME}/onec-client:${ONEC_VERSION} as base
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 ARG ONEC_VERSION
 
 COPY --from=base /opt /opt
@@ -20,46 +20,15 @@ RUN apt-get update \
     xvfb \
   && env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     xfce4 \
-  && env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    gtk3-engines-xfce \
-    libgtk-3-bin \
-    libpulse0 \
-    mousepad \
-    xfce4-notifyd \
-    xfce4-taskmanager \
-    xfce4-terminal \
-  && env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    xfce4-battery-plugin \
-    xfce4-clipman-plugin \
-    xfce4-cpufreq-plugin \
-    xfce4-cpugraph-plugin \
-    xfce4-diskperf-plugin \
-    xfce4-datetime-plugin \
-    xfce4-fsguard-plugin \
-    xfce4-genmon-plugin \
-    xfce4-indicator-plugin \
-    xfce4-netload-plugin \
-    xfce4-notes-plugin \
-    xfce4-places-plugin \
-    xfce4-sensors-plugin \
-    xfce4-smartbookmark-plugin \
-    xfce4-systemload-plugin \
-    xfce4-timer-plugin \
-    xfce4-verve-plugin \
-    xfce4-weather-plugin \
-    xfce4-whiskermenu-plugin \
-  && env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    libxv1 \
-    mesa-utils \
-    mesa-utils-extra \
+    xfce4-goodies \
   && sed -i 's%<property name="ThemeName" type="string" value="Xfce"/>%<property name="ThemeName" type="string" value="Raleigh"/>%' /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     dirmngr \
     gnupg \
-  && echo "deb http://http.debian.net/debian/ buster main contrib non-free" > /etc/apt/sources.list \
-  && echo "deb http://http.debian.net/debian/ buster-backports main" >> /etc/apt/sources.list \
-  && echo "deb http://http.debian.net/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list \
-  && echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list \
+  && echo "deb http://http.debian.net/debian/ bullseye main contrib non-free" > /etc/apt/sources.list \
+  && echo "deb http://http.debian.net/debian/ bullseye-backports main" >> /etc/apt/sources.list \
+  && echo "deb http://http.debian.net/debian/ bullseye-proposed-updates main contrib non-free" >> /etc/apt/sources.list \
+  && echo "deb http://security.debian.org/debian-security/ bullseye-security main contrib non-free" >> /etc/apt/sources.list \
   && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -70,6 +39,7 @@ RUN apt-get update \
       libfontconfig1 \
       libgsf-1-114 \
       libglib2.0-0 \
+      libgtk2.0-0 \
       libodbc1 \
       libtcmalloc-minimal4 \
       libmagickwand-6.q16-6 \
@@ -82,16 +52,26 @@ RUN apt-get update \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       libpng12-0 \
+  && rm -rf  /etc/apt/sources.list.d/xenial-security.list \
+  && apt-get update \
   # Install libwebkitgtk from stretch
   && echo "deb http://deb.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list.d/stretch.list \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libwebkitgtk-3.0-0 \
+  && rm -rf  /etc/apt/sources.list.d/stretch.list \
+  && apt-get update \
   && rm -rf  \
     /var/lib/apt/lists/* \
     /var/cache/debconf \
   && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 ENV LANG ru_RU.UTF-8
+
+# remove DST Root CA X3 cert if it exists
+COPY ./scripts/remove-dst-root-ca-x3.sh /remove-dst-root-ca-x3.sh
+RUN chmod +x /remove-dst-root-ca-x3.sh \
+  && /remove-dst-root-ca-x3.sh \
+  && rm /remove-dst-root-ca-x3.sh
 
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / \
   && rm -rf /tmp/s6-overlay-amd64.tar.gz

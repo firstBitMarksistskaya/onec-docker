@@ -55,7 +55,7 @@ EDTLINK=$(curl -s -G \
     -b /tmp/cookies.txt \
     --data-urlencode "nick=DevelopmentTools10" \
     --data-urlencode "ver=$ONEC_VERSION" \
-    --data-urlencode "path=$EDTPATHLINK" \
+    --data "path=$EDTPATHLINK" \
     https://releases.1c.ru/version_file | grep -oP '(?<=a href=")[^"]+(?=">Скачать дистрибутив<)')
 else
 

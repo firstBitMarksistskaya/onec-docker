@@ -20,6 +20,7 @@ $ cp .onec.env.example .onec.env
 * ONEC_PASSWORD - пароль для учётной записи на http://releases.1c.ru
 * ONEC_VERSION - версия платформы 1С:Преприятия 8.3, которая будет в образе
 * DOCKER_USERNAME - учётная запись на [Docker Hub](https://hub.docker.com)
+* ONESCRIPT_VERSION - необходимая версия oscript
 
 Затем экспортируйте все необходимые переменные:
 
@@ -191,7 +192,8 @@ docker build --build-arg DOCKER_USERNAME=${DOCKER_USERNAME} \
 ```bash
 docker build --build-arg DOCKER_USERNAME=${DOCKER_USERNAME} \
   --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_USERNAME}/oscript:1.0.21 \
+  --build-arg ONESCRIPT_VERSION=${ONESCRIPT_VERSION} \
+  -t ${DOCKER_USERNAME}/oscript:${ONESCRIPT_VERSION} \
   -f oscript/Dockerfile .
 ```
 

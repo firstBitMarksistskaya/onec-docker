@@ -22,6 +22,8 @@ $ cp .onec.env.example .onec.env
 * DOCKER_USERNAME - учётная запись на [Docker Hub](https://hub.docker.com)
 * ONESCRIPT_VERSION - необходимая версия oscript
 
+В случае необходимости сборки образа oscript с поддержкой кириллицы раскоментируйте в файле `.onec.env` соответствующую секцию и закомментируйте секцию с английской локалью.
+
 Затем экспортируйте все необходимые переменные:
 
 ```bash
@@ -190,11 +192,15 @@ docker build --build-arg DOCKER_USERNAME=${DOCKER_USERNAME} \
 [(Наверх)](#Оглавление)
 
 ```bash
-docker build --build-arg DOCKER_USERNAME=${DOCKER_USERNAME} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  --build-arg ONESCRIPT_VERSION=${ONESCRIPT_VERSION} \
-  -t ${DOCKER_USERNAME}/oscript:${ONESCRIPT_VERSION} \
-  -f oscript/Dockerfile .
+docker build --build-arg DOCKER_USERNAME=$DOCKER_USERNAME \
+  --build-arg LANGUAGE_PACK=$LANGUAGE_PACK \
+  --build-arg ONESCRIPT_VERSION=$ONESCRIPT_VERSION \
+  --build-arg BUILD_LANGUAGE=$BUILD_LANGUAGE \
+  --build-arg BUILD_LANG=$BUILD_LANG \
+  --build-arg BUILD_LC_ALL=$BUILD_LC_ALL \
+  --build-arg TAG_PREFIX=$TAG_PREFIX \
+  -t $DOCKER_USERNAME/oscript:$TAG_PREFIX$ONESCRIPT_VERSION \
+  -f oscript-ru/Dockerfile .
 ```
 
 ## vanessa-runner

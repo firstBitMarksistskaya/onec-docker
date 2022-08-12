@@ -1,19 +1,35 @@
 ARG DOCKER_USERNAME=library
-ARG BASE_IMAGE=debian
-ARG BASE_TAG=bullseye
+ARG BASE_IMAGE=ubuntu
+ARG BASE_TAG=20.04
 
 FROM ${BASE_IMAGE}:${BASE_TAG}
 
-# Installing mono and oscript dependencies
-ARG MONO_VERSION=6.12.0.122
+# Installing build dependencies and locale
+
+ARG LANGUAGE_PACK=${LANGUAGE_PACK}
+ARG BUILD_LANGUAGE=${BUILD_LANGUAGE}
+ARG BUILD_LANG=${BUILD_LANG}
+ARG BUILD_LC_ALL=${BUILD_LC_ALL}
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       gnupg \
       ca-certificates \
       wget \
-  && wget -q http://download.mono-project.com/repo/xamarin.gpg -O- | apt-key add - \
-  && echo "deb http://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list \
+      locales \
+      ${LANGUAGE_PACK}
+
+ENV LANGUAGE ${BUILD_LANGUAGE}
+ENV LANG ${BUILD_LANG}
+ENV LC_ALL ${BUILD_LC_ALL}
+
+RUN locale-gen ${BUILD_LC_ALL} \
+  && dpkg-reconfigure locales
+
+
+# Installing mono and oscript dependencies
+RUN wget -q http://download.mono-project.com/repo/xamarin.gpg -O- | apt-key add - \
+  && echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" > /etc/apt/sources.list.d/mono-official-stable.list \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     mono-runtime \

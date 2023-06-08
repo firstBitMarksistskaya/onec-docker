@@ -54,8 +54,9 @@ RUN apt-get update \
       libpng12-0 \
   && rm -rf  /etc/apt/sources.list.d/xenial-security.list \
   && apt-get update \
-  # Install libwebkitgtk from stretch
-  && echo "deb http://deb.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list.d/stretch.list \
+ # Install libwebkitgtk from bionic ubuntu
+  && echo "deb http://ru.archive.ubuntu.com/ubuntu/ bionic main universe" > /etc/apt/sources.list.d/stretch.list \
+  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32 \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libwebkitgtk-3.0-0 \

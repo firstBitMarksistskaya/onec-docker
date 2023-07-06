@@ -5,6 +5,7 @@
 build_info.txt
 .DS_Store
 dive.log
+key.json
 
 # Configuration file for HASP LM
 nethasp.ini

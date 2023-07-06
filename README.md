@@ -25,7 +25,10 @@ copy .onec.env.bat.example env.bat
 * ONEC_USERNAME - учётная запись на http://releases.1c.ru
 * ONEC_PASSWORD - пароль для учётной записи на http://releases.1c.ru
 * ONEC_VERSION - версия платформы 1С:Преприятия 8.3, которая будет в образе
-* DOCKER_USERNAME - учётная запись на [Docker Hub](https://hub.docker.com)
+* DOCKER_USERNAME - учётная запись на [Docker Hub](https://hub.docker.com), или адрес локального registry, или адрес registry на cr.yandex
+* DOCKER_CR_YANDEX - признак, что используется registry на cr.yandex
+* DOCKER_LOGIN - имя пользователя registry
+* DOCKER_PASSWORD - пароль пользователя registry, а в случае с cr.yandex - имя файла с данными авторизации [по json ключу](https://cloud.yandex.ru/docs/container-registry/operations/authentication#sa-json).
 
 Затем экспортируйте все необходимые переменные:
 

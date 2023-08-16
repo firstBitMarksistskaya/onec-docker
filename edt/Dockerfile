@@ -8,7 +8,7 @@ LABEL maintainer="Nikita Gryzlov <NikGryzlov@1bit.com>, FirstBit"
 
 ARG ONEC_USERNAME
 ARG ONEC_PASSWORD
-ARG EDT_VERSION=2021.3
+ARG EDT_VERSION=2021.3.4
 
 ENV installer_type=edt \
   ONEC_VERSION=${EDT_VERSION}

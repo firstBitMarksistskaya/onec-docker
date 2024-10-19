@@ -10,6 +10,8 @@ if %ERRORLEVEL% neq 0 goto end
 
 if %NO_CACHE%=="true" (SET last_arg="--no-cache .") else (SET last_arg=".")
 
+# если устанавливаем Coverage41C, то предварительно нужно собрать образы EDT
+if %COVERAGE41C_VERSION% neq "" (.\build-edt-swarm-agent.bat)
 
 docker build ^
 	--pull ^
@@ -98,6 +100,23 @@ if %ERRORLEVEL% neq 0 goto end
 docker push %DOCKER_REGISTRY_URL%/base-jenkins-agent:%ONEC_VERSION%
 
 if %ERRORLEVEL% neq 0 goto end
+
+if %COVERAGE41C_VERSION% neq "" (
+
+   docker build ^
+       --build-arg DOCKER_REGISTRY_URL=%DOCKER_REGISTRY_URL% ^
+       --build-arg BASE_IMAGE=base-jenkins-agent ^
+       --build-arg BASE_TAG=%ONEC_VERSION% ^
+       --build-arg EDT_VERSION=%EDT_VERSION% ^
+       --build-arg COVERAGE41C_VERSION=%COVERAGE41C_VERSION% ^
+       -t %DOCKER_REGISTRY_URL%/base-jenkins-coverage-agent:%ONEC_VERSION% ^
+       -f coverage41C/Dockerfile ^
+       %last_arg%
+
+
+docker push %DOCKER_REGISTRY_URL%/base-jenkins-coverage-agent:%ONEC_VERSION%
+
+)
 
 :end
 echo End of program.

@@ -26,7 +26,7 @@
   - [oscript](#oscript)
   - [vanessa-runner](#vanessa-runner)
   - [EDT](#edt)
-  
+
 # Использование
 
 В терминале введите:
@@ -46,7 +46,10 @@ copy .onec.env.bat.example env.bat
 * ONEC_USERNAME - учётная запись на http://releases.1c.ru
 * ONEC_PASSWORD - пароль для учётной записи на http://releases.1c.ru
 * ONEC_VERSION - версия платформы 1С:Преприятия 8.3, которая будет в образе
+* EDT_VERSION - версия EDT. Обязательно заполнять только при сборке образов с EDT или при использовании замеров покрытия (см. `COVERAGE41C_VERSION`)
 * DOCKER_REGISTRY_URL - Адрес Docker-registry в котором будут храниться образы
+* COVERAGE41C_VERSION - версия Coverage41C
+Если заполнено, то при выполнении скриптов `build-base-*-agent.*` будет также собран образ `base-jenkins-coverage-agent`, подготовленный для сбора замеров покрытия с помощью Coverage41C. Требуется также указать значение для переменной EDT_VERSION.
 
 Затем экспортируйте все необходимые переменные:
 
@@ -68,7 +71,9 @@ env.bat
     * build-base-swarm-jenkins-agent.sh
     * build-edt-swarm-agent.sh
     * build-oscript-swarm-agent.sh
+
 2. Если же вы планируете использовать k8s
+
     * build-base-k8s-jenkins-agent.sh
     * build-edt-k8s-agent.sh
     * build-oscript-k8s-agent.sh
@@ -81,7 +86,7 @@ env.bat
 
 - взять ваш файл nethasp.ini
 - создать из него docker config командой `docker config create nethasp.ini ./nethasp.ini`
-- в Jenkins, в настройках Docker Agent templates у соответствующих агентов в параметре Configs указать `nethasp.ini:/opt/1cv8/current/conf/nethasp.ini`  
+- в Jenkins, в настройках Docker Agent templates у соответствующих агентов в параметре Configs указать `nethasp.ini:/opt/1cv8/current/conf/nethasp.ini`
 
 ## Сервер
 [(Наверх)](#Оглавление)

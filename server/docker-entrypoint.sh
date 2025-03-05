@@ -50,6 +50,9 @@ main() {
     setup_ragent_cmd
     setup_ras_cmd
 
+    # Добавляем каталог с исполняемыми файлами 1С в PATH
+    PATH="/opt/1cv8/current:$PATH"
+
     echo "Запускаем ras с необходимыми параметрами"
     echo "Выполняемая команда: $RAS_CMD"
     $RAS_CMD 2>&1 &  # Запуск ras в фоновом режиме

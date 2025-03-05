@@ -1,8 +1,8 @@
 # Используем базовый образ для скачивания
-ARG DOCKER_REGISTRY_URL
-ARG BASE_IMAGE
-ARG BASE_TAG
-FROM ${DOCKER_REGISTRY_URL}/${BASE_IMAGE}:${BASE_TAG} as downloader
+ARG DOCKER_REGISTRY_URL=localhost:5000
+ARG BASE_IMAGE=oscript-downloader
+ARG BASE_TAG=latest
+FROM ${DOCKER_REGISTRY_URL}/${BASE_IMAGE}:${BASE_TAG} AS downloader
 
 # Копирование скрипта скачивания и локальных дистрибутивов
 COPY ./scripts/download_yard.sh /download.sh
@@ -18,23 +18,23 @@ WORKDIR /tmp
 
 # Установка необходимых пакетов и генерация локали
 RUN apt-get update \
-  && apt-get install -y \
-          locales \
-          p7zip-rar \
-          p7zip-full \
+  && apt-get install --yes \
+    locales \
+    p7zip-full \
+    p7zip-rar \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen ru_RU.UTF-8 \
   && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 
 # Установка переменных окружения для корректной работы локали
-ENV LANG ru_RU.UTF-8
-ENV LANGUAGE ru_RU:ru
-ENV LC_ALL ru_RU.UTF-8
+ENV LANG=ru_RU.UTF-8
+ENV LANGUAGE=ru_RU:ru
+ENV LC_ALL=ru_RU.UTF-8
 
 RUN /download.sh "$ONEC_USERNAME" "$ONEC_PASSWORD" "$ONEC_VERSION" "server"
 
 # Начало основной стадии сборки
-FROM ubuntu:20.04 as installer
+FROM ubuntu:20.04 AS installer
 
 # Копируем скрипты и файлы установки
 ARG ONEC_VERSION
@@ -46,20 +46,20 @@ ENV installer_type=server
 
 # Установка зависимостей и настройка локали
 RUN apt-get update \
-&& apt-get install -yq \
-      procps \
-      tzdata \
-      debconf-utils \
-      curl \
-      fontconfig \
-      unixodbc \
-      ttf-mscorefonts-installer \
-      libgsf-1-114 \
-      keyboard-configuration \
-&& dpkg-reconfigure -f noninteractive tzdata \
-&& dpkg-reconfigure -f noninteractive keyboard-configuration \
-&& apt-get install -yq geoclue-2.0 gstreamer1.0-plugins-bad \
-&& export LANG=ru_RU.UTF-8
+  && apt-get install --yes --quiet \
+    curl \
+    debconf-utils \
+    fontconfig \
+    keyboard-configuration \
+    libgsf-1-114 \
+    procps \
+    ttf-mscorefonts-installer \
+    tzdata \
+    unixodbc \
+  && dpkg-reconfigure -f noninteractive tzdata \
+  && dpkg-reconfigure -f noninteractive keyboard-configuration \
+  && apt-get install -yq geoclue-2.0 gstreamer1.0-plugins-bad \
+  && export LANG=ru_RU.UTF-8
 
 COPY ./scripts/install_new.sh /install.sh
 COPY --from=downloader /tmp/ /tmp/
@@ -89,15 +89,15 @@ COPY --from=installer /opt/1cv8 /opt/1cv8
 COPY --from=installer /bin/gosu /bin/gosu
 RUN set -xe \
   && apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      locales \
-      iproute2 \
-      imagemagick \
-      fontconfig \
-      ca-certificates \
+  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+    ca-certificates \
+    fontconfig \
+    imagemagick \
+    iproute2 \
+    locales \
   && rm -rf /var/lib/apt/lists/* /var/cache/debconf \
   && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
-ENV LANG ru_RU.UTF-8
+ENV LANG=ru_RU.UTF-8
 
 # Настройка группы и пользователя
 RUN groupadd -r grp1cv8 --gid=$onec_gid \
@@ -115,7 +115,8 @@ COPY ./server/logcfg.xml /opt/1cv8/current/conf
 COPY ./server/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN ln -s usr/local/bin/docker-entrypoint.sh /  # backwards compat
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh 
-RUN apt-get update && apt-get install -yq procps
+RUN apt-get update && apt-get install --yes --quiet procps \
+  && rm -rf /var/lib/apt/lists/* /var/cache/debconf
 RUN chmod +x /opt/1cv8/current/ragent
 
 # Настройка точки входа и экспонирование портов

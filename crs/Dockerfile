@@ -1,4 +1,4 @@
-FROM alpine:latest as downloader
+FROM alpine:latest AS downloader
 
 ARG ONEC_USERNAME
 ARG ONEC_PASSWORD
@@ -24,7 +24,7 @@ RUN rm ./${downloads}/.gitkeep \
   && for file in ${downloads}/*.tar.gz; do tar -xzf "$file"; done \
   && rm -rf ${downloads}/*.*
 
-FROM i386/debian:bullseye-slim as base
+FROM i386/debian:bullseye-slim AS base
 
 ARG gosu_ver=1.11
 ARG ONEC_VERSION
@@ -68,7 +68,7 @@ RUN set -xe \
     /var/lib/apt/lists/* \
     /var/cache/debconf \
   && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
-ENV LANG ru_RU.UTF-8
+ENV LANG=ru_RU.UTF-8
 
 RUN groupadd -r grp1cv8 --gid=$onec_gid \
   && useradd -r -g grp1cv8 --uid=$onec_uid --home-dir=/home/usr1cv8 --shell=/bin/bash usr1cv8 \

@@ -1,6 +1,6 @@
-ARG DOCKER_REGISTRY_URL
-ARG ONEC_VERSION
-FROM ${DOCKER_REGISTRY_URL}/onec-client:${ONEC_VERSION} as base
+ARG DOCKER_REGISTRY_URL=localhost:5000
+ARG ONEC_VERSION=8.3.25.1546
+FROM ${DOCKER_REGISTRY_URL}/onec-client:${ONEC_VERSION} AS base
 
 FROM debian:bullseye-slim
 ARG ONEC_VERSION
@@ -11,12 +11,12 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v1.21.8.0/s6
 
 RUN apt-get update \
   && apt-mark hold iptables \
-  && env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  && env DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
     dbus-x11 \
     psmisc \
-    xdg-utils \
-    x11-xserver-utils \
     x11-utils \
+    x11-xserver-utils \
+    xdg-utils \
     xvfb \
   && env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     xfce4 \
@@ -31,24 +31,23 @@ RUN apt-get update \
   && echo "deb http://security.debian.org/debian-security/ bullseye-security main contrib non-free" >> /etc/apt/sources.list \
   && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
   && apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      ca-certificates \
-      git \
-      locales \
-      ttf-mscorefonts-installer \
-      libfontconfig1 \
-      libgsf-1-114 \
-      libglib2.0-0 \
-      libgtk2.0-0 \
-      libodbc1 \
-      libtcmalloc-minimal4 \
-      libmagickwand-6.q16-6 \
-      libwebkit2gtk-4.0-37 \
-      at-spi2-core \
-      procps \
-      x11vnc \
-      iproute2 \
-  # Install libpng12-0 from xenial
+  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+    at-spi2-core \
+    ca-certificates \
+    git \
+    iproute2 \
+    libfontconfig1 \
+    libglib2.0-0 \
+    libgsf-1-114 \
+    libgtk2.0-0 \
+    libmagickwand-6.q16-6 \
+    libodbc1 \
+    libtcmalloc-minimal4 \
+    libwebkit2gtk-4.0-37 \
+    locales \
+    procps \
+    ttf-mscorefonts-installer \
+    x11vnc \
   && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 40976EAF437D05B5 \
   && echo "deb http://security.ubuntu.com/ubuntu xenial-security main" > /etc/apt/sources.list.d/xenial-security.list \
   && apt-get update \
@@ -67,7 +66,7 @@ RUN apt-get update \
     /var/lib/apt/lists/* \
     /var/cache/debconf \
   && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
-ENV LANG ru_RU.UTF-8
+ENV LANG=ru_RU.UTF-8
 
 # remove DST Root CA X3 cert if it exists
 COPY ./scripts/remove-dst-root-ca-x3.sh /remove-dst-root-ca-x3.sh

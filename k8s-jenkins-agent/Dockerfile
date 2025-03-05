@@ -1,10 +1,10 @@
 # Для сборки использован стандартный шаблон jenkins-inbound-agent https://github.com/jenkinsci/docker-agent/blob/master/debian/Dockerfile
-# Стадию с as jre-build убрал, т.к. у нас на этот момент уже всегда есть джава в контейнере.
+# Стадию с AS jre-build убрал, т.к. у нас на этот момент уже всегда есть джава в контейнере.
 ARG DOCKER_REGISTRY_URL
 ARG BASE_IMAGE
 ARG BASE_TAG
 
-FROM ${DOCKER_REGISTRY_URL}/${BASE_IMAGE}:${BASE_TAG} as agent
+FROM ${DOCKER_REGISTRY_URL}/${BASE_IMAGE}:${BASE_TAG} AS agent
 
 LABEL maintainer="Nikita Gryzlov <NikGryzlov@1bit.com>, FirstBit"
 

@@ -4,7 +4,7 @@ ARG BASE_TAG
 ARG EDT_VERSION=2021.3
 ARG COVERAGE41C_VERSION=2.7.3
 
-FROM ${DOCKER_REGISTRY_URL}/edt:${EDT_VERSION} as base
+FROM ${DOCKER_REGISTRY_URL}/edt:${EDT_VERSION} AS installededt
 
 RUN ln -s $(find /opt/1C -name "com._1c.g5.v8.dt.debug.*.jar" -printf '%h\n'| sort -u) /opt/1C/edt_plugins
 
@@ -13,7 +13,7 @@ LABEL maintainer="Dima Ovcharenko <d.ovcharenko90@gmail.com>, Korus Consulting L
 
 ARG COVERAGE41C_VERSION
 
-COPY --from=base /opt/1C/edt_plugins/com._1c.g5.v8.dt.debug.core_*.jar /opt/1C/edt_plugins/com._1c.g5.v8.dt.debug.model_*.jar /opt/1C/1CE/
+COPY --from=installededt /opt/1C/edt_plugins/com._1c.g5.v8.dt.debug.core_*.jar /opt/1C/edt_plugins/com._1c.g5.v8.dt.debug.model_*.jar /opt/1C/1CE/
 
 ADD https://github.com/1c-syntax/Coverage41C/releases/download/v${COVERAGE41C_VERSION}/Coverage41C-${COVERAGE41C_VERSION}.tar \
     /opt/

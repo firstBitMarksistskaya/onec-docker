@@ -1,19 +1,13 @@
-# Сервер хранилища + Apache 2.4
+# Сервер хранилища + Apache 2
 
-Монтирование хранилищ внутрь каталога:
+Пример запуска:
 
+в каталоге `C:\Temp\crs` - разные хранилища, например есть `C:\Temp\crs\sample-svn`
 ```
-/home/usr1cv8/.1cv8
-```
-
-Например:
-
-```
--v ./my_depot:/home/usr1cv8/.1cv8/repo/my_depot
+docker run --rm -v "C:\Temp\crs:/home/usr1cv8/.1cv8/crs" -p 1548:80 localhost:5000/crs-apache:8.3.25.1546
 ```
 
 Доступ к хранилищу:
-
 ```
-http://localhost:8080/repo/repo.1ccr/my_depot
+http://localhost:1548/crs/repo.1ccr/sample-svn
 ```

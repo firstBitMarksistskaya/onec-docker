@@ -5,9 +5,6 @@ FROM ${DOCKER_REGISTRY_URL}/${BASE_IMAGE}:${BASE_TAG} AS onecclient
 
 ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64-installer /tmp/s6-overlay-installer
 
-ARG onec_uid="999"
-ARG onec_gid="999"
-
 USER root
 
 RUN apt-get update \

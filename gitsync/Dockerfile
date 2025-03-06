@@ -1,13 +1,13 @@
 ARG DOCKER_REGISTRY_URL
 ARG ONEC_VERSION
-FROM ${DOCKER_REGISTRY_URL}/onec-client:${ONEC_VERSION} AS installedonec
+FROM ${DOCKER_REGISTRY_URL}/onec-client:${ONEC_VERSION} AS onecclient
 
 FROM mono:5.20-slim
 LABEL maintainer="Anton Kvashenkin <anton.jugatsu@gmail.com> (@jugatsu)"
 
 ARG gitsync_ver=3.0.0
 
-COPY --from=installedonec /opt /opt
+COPY --from=onecclient /opt /opt
 
 RUN echo "deb http://http.debian.net/debian/ stretch main contrib non-free" > /etc/apt/sources.list.d/stretch.list \
   && echo "deb http://http.debian.net/debian/ stretch-updates main contrib non-free" >> > /etc/apt/sources.list.d/stretch-updates.list \

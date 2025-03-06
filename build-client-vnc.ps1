@@ -47,6 +47,17 @@ docker build `
     --build-arg DOCKER_REGISTRY_URL=$env:DOCKER_REGISTRY_URL `
     --build-arg BASE_IMAGE=oscript-downloader `
     --build-arg BASE_TAG=latest `
+    -t "$($env:DOCKER_REGISTRY_URL)/onec-client:$($env:ONEC_VERSION)" `
+    -f client/Dockerfile `
+    $last_arg
+
+docker build `
+    --build-arg ONEC_USERNAME=$env:ONEC_USERNAME `
+    --build-arg ONEC_PASSWORD=$env:ONEC_PASSWORD `
+    --build-arg ONEC_VERSION=$env:ONEC_VERSION `
+    --build-arg DOCKER_REGISTRY_URL=$env:DOCKER_REGISTRY_URL `
+    --build-arg BASE_IMAGE=onec-client `
+    --build-arg BASE_TAG=$env:ONEC_VERSION `
     -t "$($env:DOCKER_REGISTRY_URL)/onec-client-vnc:$($env:ONEC_VERSION)" `
     -f client-vnc/Dockerfile `
     $last_arg

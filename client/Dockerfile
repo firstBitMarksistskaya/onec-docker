@@ -34,7 +34,7 @@ ENV LC_ALL=ru_RU.UTF-8
 RUN /download.sh "$ONEC_USERNAME" "$ONEC_PASSWORD" "$ONEC_VERSION" "client"
 
 # Начало основной стадии сборки
-FROM ubuntu:20.04 AS installedonec
+FROM ubuntu:20.04 AS onecclient
 
 # Копируем скрипты и файлы установки
 ARG ONEC_VERSION
@@ -45,10 +45,7 @@ ENV distrPath=/tmp/downloads/Platform83/${ONEC_VERSION}
 ENV installer_type=client
 
 RUN set -xe \
-  && chmod 777 -R /tmp \
-  && apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
-    libwebkit2gtk-4.0-37
+  && chmod 777 -R /tmp
 
 COPY ./scripts/install_new.sh /install.sh
 COPY --from=downloader /tmp/ /tmp/
@@ -73,30 +70,7 @@ LABEL maintainer="Anton Kvashenkin <anton.jugatsu@gmail.com> (@jugatsu)"
 ARG onec_uid="999"
 ARG onec_gid="999"
 
-COPY --from=installedonec /opt /opt
-
-# RUN set -xe \
-#   && chmod 777 -R /tmp \
-#   && apt-get update \
-#   && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
-#   && DEBIAN_FRONTEND=noninteractive apt-get install --yes \
-#     ca-certificates \
-#     dbus-x11 \
-#     libfontconfig1 \
-#     libglib2.0-0 \
-#     libgsf-1-114 \
-#     libgtk2.0-0 \
-#     libodbc1 \
-#     libsm6 \
-#     libwebkit2gtk-4.0-37 \
-#     locales \
-#     ttf-mscorefonts-installer \
-#     xvfb \
-#   && rm -rf  \
-#     /var/lib/apt/lists/* \
-#     /var/cache/debconf \
-#   && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8 \
-#   && Xvfb :1 -screen 0 1024x768x24 &
+COPY --from=onecclient /opt /opt
 
 RUN set -xe \
   && chmod 777 -R /tmp \
@@ -104,17 +78,18 @@ RUN set -xe \
   && echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections \
   && DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     ca-certificates \
-    dbus-x11 \
     libfontconfig1 \
     libglib2.0-0 \
     libgsf-1-114 \
     libgtk2.0-0 \
+    libmagickwand-6.q16-6 \
     libodbc1 \
     libsm6 \
     libwebkit2gtk-4.0-37 \
     locales \
     ttf-mscorefonts-installer \
     xvfb \
+  && update-ca-certificates \
   && rm -rf /var/lib/apt/lists/* /var/cache/debconf \
   && localedef -i ru_RU -c -f UTF-8 -A /usr/share/locale/locale.alias ru_RU.UTF-8
 
@@ -123,6 +98,7 @@ ENV LANG=ru_RU.UTF-8
 RUN groupadd -r grp1cv8 --gid=$onec_gid \
   && useradd -r -g grp1cv8 --uid=$onec_uid --home-dir=/home/usr1cv8 --shell=/bin/bash usr1cv8 \
   && mkdir -p /home/usr1cv8/.1cv8 \
+  && mkdir -p /home/usr1cv8/.1C/1cestart \
   && chown -R usr1cv8:grp1cv8 /home/usr1cv8
 
 VOLUME /home/usr1cv8/.1cv8/
@@ -132,6 +108,10 @@ RUN ln -s /usr/local/bin/docker-entrypoint.sh / \
   && chmod +x /usr/local/bin/docker-entrypoint.sh \
   && mkdir -p /tmp/.X11-unix \
   && chmod 1777 -R /tmp
+
+ENV DISPLAY=:0
+ENV DISPLAY_WIDTH=1440
+ENV DISPLAY_HEIGHT=900
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 

@@ -4,4 +4,6 @@
 mkdir -p /root/.config/xfce4/xfconf/xfce-perchannel-xml
 cp /etc/xdg/xfce4/panel/default.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
 
+echo "Starting startxfce4 current path: $PATH"
+
 exec startxfce4

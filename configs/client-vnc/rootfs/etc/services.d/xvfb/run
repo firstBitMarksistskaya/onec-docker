@@ -1,3 +1,5 @@
 #!/usr/bin/with-contenv sh
 
-exec /usr/bin/Xvfb $DISPLAY -screen 0 ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}x24
+echo "Starting Xvfb display $DISPLAY ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}x24"
+
+exec Xvfb $DISPLAY -screen 0 ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}x24

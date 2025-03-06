@@ -1,3 +1,5 @@
 #!/usr/bin/with-contenv sh
 
-exec /usr/bin/x11vnc -q -forever -shared -nomodtweak -capslock -display $DISPLAY
+echo "Starting /usr/bin/x11vnc jn display $DISPLAY"
+
+exec x11vnc -q -forever -shared -nomodtweak -capslock -display $DISPLAY

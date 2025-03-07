@@ -8,79 +8,51 @@
 
 - [Описание](#описание)
 - [Использование](#использование)
-  - [Как сбилдить образы](#как-сбилдить-образы)
   - [Как запустить в docker-compose](#как-запустить-в-docker-compose)
   - [Как использовать готовые дистрибутивы](#как-использовать-готовые-дистрибутивы)
   - [Как использовать nethasp.ini в Jenkins + Docker Swarm plugin](#как-использовать-nethaspini-в-jenkins--docker-swarm-plugin)
 - [Оглавление](#оглавление)
+  - [EDT](#edt)
   - [Сервер](#сервер)
-  - [Сервер с дополнительными языками](#сервер-с-дополнительными-языками)
   - [Клиент](#клиент)
   - [Клиент с поддержкой VNC](#клиент-с-поддержкой-vnc)
-  - [Клиент с дополнительными языками](#клиент-с-дополнительными-языками)
-  - [Тонкий клиент](#тонкий-клиент)
-  - [Тонкий клиент с дополнительными языками](#тонкий-клиент-с-дополнительными-языками)
   - [Хранилище конфигурации](#хранилище-конфигурации)
-  - [rac-gui](#rac-gui)
-  - [gitsync](#gitsync)
-  - [oscript](#oscript)
-  - [vanessa-runner](#vanessa-runner)
-  - [EDT](#edt)
+  - [ПУСК](#пуск)
+
 
 # Использование
-
-В терминале введите:
-
-Команда Linux:
-```bash
-# для Linux
-$ cp .onec.env.example .onec.env
+Нужен регистри, например
+```shell
+docker run -d -p 5000:5000 --name registry --restart always -v local-registry-data:/var/lib/registry registry:2
 ```
-```batch
-:: для Windows
-copy .onec.env.bat.example env.bat
+Проверяем доступность регистри
+```shell
+curl -s -i -X GET http://registry.localhost:5000/v2/_catalog
 ```
 
-Скорректируйте файл `.onec.env` в соответствии со своим окружением:
-
-* ONEC_USERNAME - учётная запись на http://releases.1c.ru
-* ONEC_PASSWORD - пароль для учётной записи на http://releases.1c.ru
-* ONEC_VERSION - версия платформы 1С:Преприятия 8.3, которая будет в образе
-* EDT_VERSION - версия EDT. Обязательно заполнять только при сборке образов с EDT или при использовании замеров покрытия (см. `COVERAGE41C_VERSION`)
-* DOCKER_REGISTRY_URL - Адрес Docker-registry в котором будут храниться образы
-* COVERAGE41C_VERSION - версия Coverage41C
-Используется при сборке агента скриптами `build-base-*-jenkins-coverage-agent.*`.
-
-Затем экспортируйте все необходимые переменные:
-
-```bash
-# для Linux
-$ source .onec.env
+Создайте файл `.env` содержащий перменные среды
+ * `ONEC_USERNAME` и `ONEC_PASSWORD` - логин и пароль от информационно технологического сопровождения http://releases.1c.ru
+ * `ONEC_VERSION` - какую версию 1С использовать
+ * `EDT_VERSION` - какую версию ЕДТ использовать
+ * `DOCKER_` - доступный для пуша регистри для контейнеров
+ * `DOCKER_SYSTEM_PRUNE` - очистить перед сборкой незапущенные локальные контейнеры, неиспользуемые запущенными контейнерами тома, неиспользуемые запущенными контейнерами образы, используйте с осторожностью
 ```
-```batch
-:: для Windows
-env.bat
+ONEC_USERNAME=0000000
+ONEC_PASSWORD=password
+ONEC_VERSION=8.3.25.1546
+EDT_VERSION=2024.2.3
+
+DOCKER_REGISTRY_URL=localhost:5000
+DOCKER_LOGIN=login
+DOCKER_PASSWORD=pass
+DOCKER_SYSTEM_PRUNE=false
 ```
 
-## Как сбилдить образы
-
-:point_up: Запустите последовательно скрипты для сборки образов.
-
-1. Если вам нужны образы для использования в docker-swarm:
-
-    * build-base-swarm-jenkins-agent.sh (или build-base-swarm-jenkins-coverage-agent.sh с замерами покрытия)
-    * build-edt-swarm-agent.sh
-    * build-oscript-swarm-agent.sh
-
-2. Если же вы планируете использовать k8s:
-
-    * build-base-k8s-jenkins-agent.sh (или build-base-k8s-jenkins-coverage-agent.sh с замерами покрытия)
-    * build-edt-k8s-agent.sh
-    * build-oscript-k8s-agent.sh
+чего на bat и sh - не проврял, проверял исправлял скрипты ps1, выполнение скриптов предполагается в корневой директории (там где они лежат), в другой - не будет работать
 
 ## Как использовать готовые дистрибутивы
-
 Вы можете использовать готовые дистрибутивы платформы, для этого достаточно разместить их в папке `distr`. Скрипты будут автоматически использовать их для сборки образа.
+(не проверял, в каком виде их класть не понятно)
 
 ## Как использовать nethasp.ini в Jenkins + Docker Swarm plugin
 
@@ -88,141 +60,70 @@ env.bat
 - создать из него docker config командой `docker config create nethasp.ini ./nethasp.ini`
 - в Jenkins, в настройках Docker Agent templates у соответствующих агентов в параметре Configs указать `nethasp.ini:/opt/1cv8/current/conf/nethasp.ini`
 
-## Сервер
-[(Наверх)](#Оглавление)
+## EDT
+`./build-edt.ps1`
 
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-  --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/onec-server:${ONEC_VERSION} \
-  -f server/Dockerfile .
+Пример использования, временная или нет рабочей области, файлы src проекта EDT находятся здесь `D:\Projects\sample-onec-ws\sample-onec\edt-project\src`
+```shell
+docker run --rm -v "D:\Projects:/home/projects" -v "C:\Temp:/tmp/work" localhost:5000/edt:2024.2.3 1cedtcli -data "/tmp/tmp-edt-ws" -command export --project "/home/projects/sample-onec-ws/sample-onec/edt-project" --configuration-files "/tmp/work/1-0-0-1-3df46495/"
 ```
+в результате в `C:\Temp\1-0-0-1-3df46495` имеем конфигурационные файлы в формате 1С
 
-## Сервер с дополнительными языками
-[(Наверх)](#Оглавление)
+Пример использования, ранее созданная рабочая область находится здесь `D:/Projects/slk-ws`, в рабочей области есть проект с именем `acc3-edt`
+```shell
+docker run --rm -v "D:\Projects:/home/projects" -v "C:\Temp:/tmp/work" localhost:5000/edt:2024.2.3  1cedtcli -data "/home/projects/slk-ws" -command export --project-name "acc3-edt" --configuration-files "/tmp/work/3-0-177-16-d9104849/"
+```
+в результате изредка в `C:\Temp\3-0-177-16-d9104849` конфигурационные файлы в формате 1С
 
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-  --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  --build-arg nls_enabled=true \
-  -t ${DOCKER_REGISTRY_URL}/onec-server-nls:${ONEC_VERSION} \
-  -f server/Dockerfile .
+## Сервер
+`./build-server.ps1`
+
+пример использования:
+```shell
+docker run --rm localhost:5000/onec-server:8.3.25.1546 /opt/1cv8/current/ibcmd --version
 ```
 
 ## Клиент
-[(Наверх)](#Оглавление)
+`./build-client.ps1`
 
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-  --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/onec-client:${ONEC_VERSION} \
-  -f client/Dockerfile .
+пример использования обновление конфигурации базы данных:
+```shell
+docker run --rm -v "E:\Issues\sample-onec:/home/dbpath" localhost:5000/onec-client:8.3.25.1546 /opt/1cv8/current/1cv8 DESIGNER /F"/home/dbpath" /UpdateDBCfg /DisableStartupDialogs /DisableStartupMessages /Out /home/dbpath/.log -NoTruncate
 ```
+в файле `E:\Issues\sample-onec\.log` - дописываются ошибки
 
 ## Клиент с поддержкой VNC
-[(Наверх)](#Оглавление)
+`./build-client-vnc.ps1`
 
-```bash
-docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/onec-client-vnc:${ONEC_VERSION} \
-  -f client-vnc/Dockerfile .
-```
-
-## Клиент с дополнительными языками
-[(Наверх)](#Оглавление)
-
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-  --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  --build-arg nls_enabled=true \
-  -t ${DOCKER_REGISTRY_URL}/onec-client-nls:${ONEC_VERSION} \
-  -f client/Dockerfile .
-```
-
-## Тонкий клиент
-[(Наверх)](#Оглавление)
-
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-  --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/onec-thin-client:${ONEC_VERSION} \
-  -f thin-client/Dockerfile .
-```
-
-## Тонкий клиент с дополнительными языками
-[(Наверх)](#Оглавление)
-
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-  --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  --build-arg nls_enabled=true \
-  -t ${DOCKER_REGISTRY_URL}/onec-thin-client-nls:${ONEC_VERSION} \
-  -f thin-client/Dockerfile .
+Для проверки запускаем, на порту 5900 например с помошью RealVNC видим запущенную среду, можно добавить базу из каталога /home/dbpath
+```shell
+docker run --rm -p 5900:5900 -v "E:\Issues\sample-onec:/home/dbpath" localhost:5000/onec-client-vnc:8.3.25.1546
 ```
 
 ## Хранилище конфигурации
-[(Наверх)](#Оглавление)
+### Хранилище на tcp
+`./build-crs.ps1`
 
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-  --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/onec-crs:${ONEC_VERSION} \
-  -f crs/Dockerfile .
+Проверка: запустить
+```shell
+docker run --rm -v "C:\Temp\crs:/home/usr1cv8/.1cv8/crs" -p 1542:1542 localhost:5000/crs:8.3.25.1546
 ```
+попробовать создать хранилище tcp://localhost:1542/sample-svn
 
-## rac-gui
-[(Наверх)](#Оглавление)
+### Хранилище на http
+`./build-crs-apache.ps1`
 
-```bash
-docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/onec-rac-gui:${ONEC_VERSION}-1.0.1 \
-  -f rac-gui/Dockerfile .
+Проверка
+```shell
+docker run --rm -v "C:\Temp\crs:/home/usr1cv8/.1cv8/crs" -p 1548:80 localhost:5000/crs-apache:8.3.25.1546
 ```
+ранее созданное хранилище должно быть доступно тут http://localhost:1548/crs/repo.1ccr/sample-svn
 
-## gitsync
-[(Наверх)](#Оглавление)
+## ПУСК
+`./build-pusk.ps1`
 
-```bash
-docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/gitsync:3.0.0 \
-  -f gitsync/Dockerfile .
+Проверка: `pusk/application.properties.example` положить в `C:\Temp\pusk\data\application.properties`, в `C:\Temp\pusk\log` - журналы
+```shell
+docker run --rm -v "C:\Temp\pusk\log:/opt/pusk/log" -v "C:\Temp\pusk\data:/opt/pusk/data" -p 8085:8080 localhost:5000/pusk:1.2.1
 ```
-
-## oscript
-[(Наверх)](#Оглавление)
-
-```bash
-docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
-  --build-arg ONEC_VERSION=${ONEC_VERSION} \
-  -t ${DOCKER_REGISTRY_URL}/oscript:1.0.21 \
-  -f oscript/Dockerfile .
-```
-
-## vanessa-runner
-[(Наверх)](#Оглавление)
-
-```bash
-docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
-  -t ${DOCKER_REGISTRY_URL}/runner:1.7.0 \
-  -f vanessa-runner/Dockerfile .
-```
-
-## EDT
-[(Наверх)](#Оглавление)
-```bash
-docker build --build-arg ONEC_USERNAME=${ONEC_USERNAME} \
-    --build-arg ONEC_PASSWORD=${ONEC_PASSWORD} \
-    --build-arg EDT_VERSION=${EDT_VERSION} \
-    -t ${DOCKER_REGISTRY_URL}/edt:${EDT_VERSION} \
-    -f edt/Dockerfile .
-```
+браузер localhost:8085 видим что-то хорошее, управление сервисами - не работает.

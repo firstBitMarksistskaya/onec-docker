@@ -25,11 +25,6 @@ if ($env:DOCKER_SYSTEM_PRUNE -eq 'true') {
     docker system prune -af
 }
 
-$last_arg = '.'
-if ($env:NO_CACHE -eq 'true') {
-    $last_arg = '--no-cache .'
-}
-
 docker build `
     --pull `
     --build-arg DOCKER_REGISTRY_URL=library `
@@ -37,8 +32,7 @@ docker build `
     --build-arg BASE_TAG=20.04 `
     --build-arg ONESCRIPT_PACKAGES="yard" `
     -t "$($env:DOCKER_REGISTRY_URL)/oscript-downloader:latest" `
-    -f oscript/Dockerfile `
-    $last_arg
+    -f oscript/Dockerfile .
 
 docker build `
     --build-arg ONEC_USERNAME=$env:ONEC_USERNAME `
@@ -48,7 +42,6 @@ docker build `
     --build-arg BASE_IMAGE=oscript-downloader `
     --build-arg BASE_TAG=latest `
     -t "$($env:DOCKER_REGISTRY_URL)/onec-server:$($env:ONEC_VERSION)" `
-    -f server/Dockerfile `
-    $last_arg
+    -f server/Dockerfile .
 
 docker push "$($env:DOCKER_REGISTRY_URL)/onec-server:$($env:ONEC_VERSION)"

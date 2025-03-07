@@ -25,6 +25,15 @@ if ($env:DOCKER_SYSTEM_PRUNE -eq 'true') {
     docker system prune -af
 }
 
+docker build `
+    --pull `
+    --build-arg DOCKER_REGISTRY_URL=library `
+    --build-arg BASE_IMAGE=ubuntu `
+    --build-arg BASE_TAG=20.04 `
+    --build-arg ONESCRIPT_PACKAGES="yard" `
+    -t "$($env:DOCKER_REGISTRY_URL)/oscript-downloader:latest" `
+    -f oscript/Dockerfile .
+
 $EDT_MAJOR_VERSION = $env:EDT_VERSION.Split('.')[0]
 if ([int]$EDT_MAJOR_VERSION -ge 2024) {
     $env:BASE_IMAGE = "azul/zulu-openjdk"
@@ -33,21 +42,6 @@ if ([int]$EDT_MAJOR_VERSION -ge 2024) {
     $env:BASE_IMAGE = "eclipse-temurin"
     $env:BASE_TAG = "11"
 }
-
-$last_arg = '.'
-if ($env:NO_CACHE -eq 'true') {
-    $last_arg = '--no-cache .'
-}
-
-docker build `
-    --pull `
-    --build-arg DOCKER_REGISTRY_URL=library `
-    --build-arg BASE_IMAGE=ubuntu `
-    --build-arg BASE_TAG=20.04 `
-    --build-arg ONESCRIPT_PACKAGES="yard" `
-    -t "$($env:DOCKER_REGISTRY_URL)/oscript-downloader:latest" `
-    -f oscript/Dockerfile `
-    $last_arg
 
 docker build `
     --build-arg ONEC_USERNAME=$env:ONEC_USERNAME `
@@ -59,7 +53,6 @@ docker build `
     --build-arg DOWNLOADER_IMAGE=oscript-downloader `
     --build-arg DOWNLOADER_TAG=latest `
     -t "$($env:DOCKER_REGISTRY_URL)/edt:$($env:EDT_VERSION)" `
-    -f edt/Dockerfile `
-    $last_arg
+    -f edt/Dockerfile .`
 
 docker push "$($env:DOCKER_REGISTRY_URL)/edt:$($env:EDT_VERSION)"

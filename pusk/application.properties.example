@@ -1,0 +1,36 @@
+#Порт запуска консоли
+server.port=${PORT:8080}
+
+#Путь создания файла config.json
+config.file.path=../data
+
+#Уровень логирования. Возможные варианты: OFF, FATAl, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+logging.level.config=FATAl
+#Путь к каталогу для сохранения файлов логов
+logging.file.path=../log
+#Имя файла логов
+logging.file.name=info
+#Паттерн вывода сообщения в логи
+logging.pattern.file=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+#Общий размер логов
+logging.total-size-cap=500MB
+#Количество дней хранения логов
+logging.max-history-days=7
+
+#Если задано значение 'true', отправка логов в файл выключится и включится отправка в syslog
+send.log.to.syslog=false
+#Адрес syslog
+syslog.host=localhost
+#Идентификации источника сообщения. Возможные варианты:KERN, USER, MAIL, DAEMON, AUTH, SYSLOG, LPR, NEWS, UUCP, CRON, AUTHPRIV, FTP, NTP, AUDIT, ALERT, CLOCK, LOCAL0, LOCAL1, LOCAL2, LOCAL3, LOCAL4, LOCAL5, LOCAL6, LOCAL7
+syslog.facility=LOCAL0
+
+#Алгоритм шифрования паролей
+cryptography.algorithm=AES
+#Ключ шифрования паролей
+cryptography.key=A134E8FF3F982HD:
+
+#Соль для хеширования учетных данных пользователей ПУСК
+security.salt=1jhjg2ddx3wqe12asdad1:
+
+#Настройка проверки сложности пароля
+check.password.strength=true

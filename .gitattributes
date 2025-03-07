@@ -1,2 +1,3 @@
 *.sh eol=lf
 configs/client-vnc/rootfs/etc/** eol=lf
+configs/pusk/rootfs/etc/** eol=lf

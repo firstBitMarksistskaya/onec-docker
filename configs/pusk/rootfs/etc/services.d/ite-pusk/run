@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "Starting PUSK"
+cd /opt/pusk/bin
+java -cp ite-pusk.jar:/opt/pusk/lib/* -Dloader.main=com.ite.utils.pusk.Application \
+    org.springframework.boot.loader.PropertiesLauncher --spring.config.import=optional:/opt/pusk/data/application.properties >> /opt/pusk/log/java.log

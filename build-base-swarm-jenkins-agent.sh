@@ -30,6 +30,23 @@ docker build \
 	-f oscript/Dockerfile \
     $last_arg
 
+# docker build \
+#     --build-arg ONEC_USERNAME=$ONEC_USERNAME \
+#     --build-arg ONEC_PASSWORD=$ONEC_PASSWORD \
+#     --build-arg ONEC_VERSION=$ONEC_VERSION \
+#     --build-arg DOCKER_REGISTRY_URL=$DOCKER_REGISTRY_URL \
+#     --build-arg BASE_IMAGE=oscript-downloader \
+#     --build-arg BASE_TAG=latest \
+#     -t ${DOCKER_REGISTRY_URL:+"$DOCKER_REGISTRY_URL/"}onec-client:$ONEC_VERSION \
+#     -f client/Dockerfile \
+#     $last_arg
+
+# if [[ -n "$DOCKER_REGISTRY_URL" ]]; then
+#   docker push $DOCKER_REGISTRY_URL/onec-client:$ONEC_VERSION
+# else
+#   echo "DOCKER_REGISTRY_URL not set, skipping docker push."
+# fi
+
 docker build \
     --build-arg ONEC_USERNAME=$ONEC_USERNAME \
     --build-arg ONEC_PASSWORD=$ONEC_PASSWORD \
@@ -37,22 +54,6 @@ docker build \
     --build-arg DOCKER_REGISTRY_URL=$DOCKER_REGISTRY_URL \
     --build-arg BASE_IMAGE=oscript-downloader \
     --build-arg BASE_TAG=latest \
-    -t ${DOCKER_REGISTRY_URL:+"$DOCKER_REGISTRY_URL/"}onec-client:$ONEC_VERSION \
-    -f client/Dockerfile \
-    $last_arg
-
-if [[ -n "$DOCKER_REGISTRY_URL" ]]; then
-  docker push $DOCKER_REGISTRY_URL/onec-client:$ONEC_VERSION
-else
-  echo "DOCKER_REGISTRY_URL not set, skipping docker push."
-fi
-
-docker build \
-    --pull \
-    --build-arg ONEC_USERNAME=$ONEC_USERNAME \
-    --build-arg ONEC_PASSWORD=$ONEC_PASSWORD \
-    --build-arg ONEC_VERSION=$ONEC_VERSION \
-    --build-arg DOCKER_REGISTRY_URL=$DOCKER_REGISTRY_URL \
     -t ${DOCKER_REGISTRY_URL:+"$DOCKER_REGISTRY_URL/"}onec-client-vnc:$ONEC_VERSION \
     -f client-vnc/Dockerfile \
     $last_arg

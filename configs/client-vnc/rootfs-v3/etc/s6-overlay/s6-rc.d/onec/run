@@ -3,4 +3,4 @@
 # https://github.com/just-containers/s6-overlay/issues/165
 export HOME=/home/usr1cv8
 
-exec s6-setuidgid usr1cv8 /opt/1cv8/current/1cv8
+exec s6-setuidgid usr1cv8 /opt/1cv8/current/1cv8 $ONEC_EXEC_PARAMS

@@ -11,8 +11,8 @@ if %ERRORLEVEL% neq 0 goto end
 if %NO_CACHE%=="true" (SET last_arg="--no-cache .") else (SET last_arg=".")
 
 docker build ^
-	--pull ^
-	--build-arg DOCKER_REGISTRY_URL=library ^
+    --pull ^
+    --build-arg DOCKER_REGISTRY_URL=library ^
     --build-arg BASE_IMAGE=eclipse-temurin ^
     --build-arg BASE_TAG=17 ^
     -t %DOCKER_REGISTRY_URL%/oscript-jdk:latest ^

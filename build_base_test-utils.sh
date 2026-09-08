@@ -14,11 +14,11 @@ if [ "${DOCKER_SYSTEM_PRUNE}" = 'true' ] ; then
     docker system prune -af
 fi
 
-#last_arg='.'
-#if [ "${NO_CACHE}" = 'true' ] ; then
-#    last_arg='--no-cache .'
-#fi
-last_arg='--no-cache .'
+last_arg='.'
+if [ "${NO_CACHE}" = 'true' ] ; then
+    last_arg='--no-cache .'
+fi
+
 docker build \
 	--pull \
     $no_cache_arg \

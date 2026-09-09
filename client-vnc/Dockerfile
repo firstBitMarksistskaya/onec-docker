@@ -2,12 +2,12 @@ ARG DOCKER_REGISTRY_URL
 ARG ONEC_VERSION=8.3.27.2130
 FROM ${DOCKER_REGISTRY_URL:+"$DOCKER_REGISTRY_URL/"}onec-client:${ONEC_VERSION} AS base
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 ARG ONEC_VERSION
 ENV PATH="${PATH}:/opt/1cv8/current"
 COPY --from=base /opt /opt
 
-RUN echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+# RUN echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
 
 ADD https://github.com/just-containers/s6-overlay/releases/download/v1.21.8.0/s6-overlay-amd64.tar.gz /tmp/
 

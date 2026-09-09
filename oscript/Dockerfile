@@ -5,7 +5,7 @@ ARG BASE_TAG=bullseye-slim
 FROM ${DOCKER_REGISTRY_URL:+"$DOCKER_REGISTRY_URL/"}${BASE_IMAGE}:${BASE_TAG}
 
 RUN echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until \
-    && apt-get update \
+    && apt-get update
 
 # Установка часового пояса Новосибирск ( ДОБАВЛЕНО )
 ENV TZ=Asia/Novosibirsk

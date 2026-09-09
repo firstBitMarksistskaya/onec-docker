@@ -7,6 +7,8 @@ ARG ONEC_VERSION
 ENV PATH="${PATH}:/opt/1cv8/current"
 COPY --from=base /opt /opt
 
+RUN echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+
 ADD https://github.com/just-containers/s6-overlay/releases/download/v1.21.8.0/s6-overlay-amd64.tar.gz /tmp/
 
 RUN apt-get update \

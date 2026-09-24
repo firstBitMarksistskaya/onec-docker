@@ -13,7 +13,7 @@ if "%DOCKER_SYSTEM_PRUNE%"=="true" docker system prune -af
 if %ERRORLEVEL% neq 0 goto end
 
 for /f "delims=." %%a in ("%EDT_VERSION%") do set EDT_MAJOR_VERSION=%%a
-if %EDT_MAJOR_VERSION% GEQ "2024" (
+if %EDT_MAJOR_VERSION% GEQ 2024 (
   set BASE_IMAGE="azul/zulu-openjdk"
   set BASE_TAG="17"
 ) else (
@@ -23,7 +23,7 @@ if %EDT_MAJOR_VERSION% GEQ "2024" (
 
 if %ERRORLEVEL% neq 0 goto end
 
-if %NO_CACHE%=="true" (SET last_arg="--no-cache .") else (SET last_arg=".")
+if "%NO_CACHE%"=="true" (SET "last_arg=--no-cache .") else (SET "last_arg=.")
 
 set edt_version=%EDT_VERSION%
 set edt_escaped=%edt_version: =_%

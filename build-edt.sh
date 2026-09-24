@@ -15,7 +15,8 @@ if [ "${DOCKER_SYSTEM_PRUNE}" = 'true' ] ; then
 fi
 
 #Если версия EDT >= 2024.1.0, использовать JDK 17
-if [[ "$EDT_VERSION" == 2024* ]] || [[ "$EDT_VERSION" == 2025* ]]; then
+edt_major_version="${EDT_VERSION%%.*}"
+if [[ "$edt_major_version" =~ ^[0-9]+$ ]] && (( edt_major_version >= 2024 )); then
   # Для новых версий используем Ubuntu + Java 17
   # (Это надежнее, чем просто голая Java-платформа)
   BASE_IMAGE="eclipse-temurin"

@@ -24,6 +24,7 @@ docker build \
     --build-arg DOCKER_REGISTRY_URL=library \
     --build-arg BASE_IMAGE=eclipse-temurin \
     --build-arg BASE_TAG=17-jdk-focal \
+    --build-arg VANESSA_RUNNER_VERSION=$VANESSA_RUNNER_VERSION \
     -t ${DOCKER_REGISTRY_URL:+"$DOCKER_REGISTRY_URL/"}oscript-jdk:latest \
     -f oscript/Dockerfile \
     $last_arg

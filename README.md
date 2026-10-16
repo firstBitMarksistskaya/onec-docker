@@ -55,6 +55,8 @@ copy .onec.env.bat.example env.bat
 - DOCKER_REGISTRY_URL - Адрес Docker-registry в котором будут храниться образы
 - COVERAGE41C_VERSION - версия Coverage41C
 Используется при сборке агента скриптами `build-base-*-jenkins-coverage-agent.*`.
+- VANESSA_RUNNER_VERSION - версия vanessa-runner, например `2.6.1`. Если не указана, устанавливается последняя версия.
+Используется при сборке образов с OneScript скриптами `build-base-*-jenkins-agent.*` (в том числе из `build-base-*-jenkins-coverage-agent.*`) и `build-oscript-*-agent.*`.
 - DEV1C_EXECUTOR_API_KEY - токен для api скачивания 1С:Исполнитель с сайта developer.1c.ru
 - EXECUTOR_VERSION - версия 1С:Исполнитель для сборки
 - TEST_UTILS_EXTRA_PACKAGES - дополнительные пакеты, которые будут установлены при сборке `test-utils` и которые будут доступны в финальном образе
@@ -266,6 +268,7 @@ docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
 ```bash
 docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
   --build-arg ONEC_VERSION=${ONEC_VERSION} \
+  --build-arg VANESSA_RUNNER_VERSION=${VANESSA_RUNNER_VERSION} \
   -t ${DOCKER_REGISTRY_URL}/oscript:1.0.21 \
   -f oscript/Dockerfile .
 ```

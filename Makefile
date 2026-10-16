@@ -89,6 +89,7 @@ gitsync:
 oscript:
 	docker build --build-arg DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL} \
 		--build-arg ONEC_VERSION=${ONEC_VERSION} \
+		--build-arg VANESSA_RUNNER_VERSION=${VANESSA_RUNNER_VERSION} \
 		-t ${DOCKER_REGISTRY_URL}/oscript:1.0.21 \
 		-f oscript/Dockerfile .
 	docker tag ${DOCKER_REGISTRY_URL}/oscript:1.0.21 ${DOCKER_REGISTRY_URL}/oscript:latest

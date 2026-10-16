@@ -62,6 +62,11 @@ FROM agent AS inbound-agent
 ARG user=jenkins
 
 USER root
+
+# jenkins-agent запускается под s6-overlay и берет параметры подключения из переменных
+# окружения пода (JENKINS_URL, JENKINS_SECRET и другие), поэтому s6-overlay не должен их сбрасывать
+ENV S6_KEEP_ENV=1
+
 COPY ./k8s-jenkins-agent/jenkins-agent /usr/local/bin/jenkins-agent
 COPY ./k8s-jenkins-agent/docker-entrypoint.sh /docker-entrypoint.sh
 

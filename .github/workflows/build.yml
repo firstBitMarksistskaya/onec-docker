@@ -67,6 +67,7 @@ jobs:
         OPENJDK_VERSION: '17'
         EXECUTOR_VERSION: '7.0.3.3'
         COVERAGE41C_VERSION: '2.7.3'
+        VANESSA_RUNNER_VERSION: '2.6.1'
         DOCKER_SYSTEM_PRUNE: 'false'
       run: |
         docker system prune -af

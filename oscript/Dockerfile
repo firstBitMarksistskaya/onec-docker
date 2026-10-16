@@ -60,7 +60,13 @@ ENV OSCRIPTBIN=/root/.local/share/ovm/current/bin
 ENV PATH="$OSCRIPTBIN:$PATH"
 
 # Update and prepare oscript packages
-RUN opm install opm \
+# vanessa-runner from ONESCRIPT_PACKAGES is pinned to VANESSA_RUNNER_VERSION, the latest one is installed if it is empty.
+# Declared here so that changing the version does not rebuild the layers above.
+ARG VANESSA_RUNNER_VERSION
+RUN if [ -n "$VANESSA_RUNNER_VERSION" ]; then \
+       ONESCRIPT_PACKAGES=$(echo " $ONESCRIPT_PACKAGES " | sed "s/ vanessa-runner / vanessa-runner@$VANESSA_RUNNER_VERSION /"); \
+     fi \
+  && opm install opm \
   && opm update --all \
   && opm install ${ONESCRIPT_PACKAGES} \
   && if echo "$ONESCRIPT_PACKAGES" | grep -q "gitsync"; then \

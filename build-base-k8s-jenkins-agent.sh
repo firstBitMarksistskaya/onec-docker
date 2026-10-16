@@ -81,6 +81,7 @@ docker build \
     --build-arg DOCKER_REGISTRY_URL=$DOCKER_REGISTRY_URL \
     --build-arg BASE_IMAGE=onec-client-vnc \
     --build-arg BASE_TAG=$ONEC_VERSION \
+    --build-arg VANESSA_RUNNER_VERSION=$VANESSA_RUNNER_VERSION \
     -t ${DOCKER_REGISTRY_URL:+"$DOCKER_REGISTRY_URL/"}onec-client-vnc-oscript:$ONEC_VERSION \
     -f oscript/Dockerfile \
     $last_arg
